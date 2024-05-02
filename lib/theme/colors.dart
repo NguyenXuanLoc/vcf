@@ -6,7 +6,7 @@ const colorTransparent = Color(0x00000000);
 const colorWhite = Color(0xffffffff);
 const colorBlack = Color(0xff000000);
 
-const colorPrimaryBrand100 = Color(0xff203E8E);
+const colorPrimaryBrand100 = Color(0xff061739);
 const colorPrimaryBrand80 = Color(0xff4D65A5);
 const colorPrimaryBrand60 = Color(0xff798BBB);
 const colorPrimaryBrand40 = Color(0xffA6B2D2);
@@ -46,7 +46,7 @@ const colorText0 = Color(0xffffffff);
 
 const colorBlueBackground = Color(0xffECF5FF);
 const colorGreyBorder = Color(0xff909399);
-const colorBackgroundColor = Color(0xffffffff);
+const colorBackgroundColor = Color(0xff11203d);
 const colorBackgroundWhite = Color(0xfff6f6f7);
 
 const colorGrey20 = Color(0xFFE9EAEC);

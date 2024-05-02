@@ -35,7 +35,8 @@ class AppTextField extends StatefulWidget {
   final Color? errorTextColor;
   final TextStyle? errorTextStyle;
 
-  const AppTextField({this.controller,
+  const AppTextField(
+      {this.controller,
       this.errorTextColor,
       this.errorTextStyle,
       this.onTapOutside,
@@ -72,7 +73,6 @@ class AppTextField extends StatefulWidget {
 }
 
 class _AppTextFieldState extends State<AppTextField> {
-
   @override
   void initState() {
     super.initState();
@@ -111,13 +111,11 @@ class _AppTextFieldState extends State<AppTextField> {
           decoration: widget.decoration ??
               decorTextField.copyWith(
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: widget.colorBorder ?? colorGrey20, width: 1),
-                  ),
+                      borderSide: BorderSide(color: HexColor("DEDEDE")),
+                      borderRadius: BorderRadius.circular(12)),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: widget.colorBorder ?? colorGrey20, width: 1),
-                  ),
+                      borderSide: BorderSide(color: HexColor("DEDEDE")),
+                      borderRadius: BorderRadius.circular(12)),
                   /*contentPadding: EdgeInsets.only(),*/
                   hintText: widget.hintText,
                   prefixIcon: widget.prefixIcon,
@@ -135,7 +133,8 @@ class _AppTextFieldState extends State<AppTextField> {
                 : '',
             style: widget.errorTextStyle ??
                 typoNormalTextRegular.copyWith(
-                    color: widget.errorTextColor ??colorSemanticRed100, fontSize: 11))
+                    color: widget.errorTextColor ?? colorSemanticRed100,
+                    fontSize: 11))
       ],
     );
   }

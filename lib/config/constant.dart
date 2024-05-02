@@ -2,6 +2,9 @@ import 'dart:io';
 
 class StorageKey {
   StorageKey._();
+
+  static const token = "token";
+  static const userModel = "userModel";
 }
 
 class FirebaseRemoteConfigConstant {
@@ -39,4 +42,13 @@ class MessageKey {
   static const String plCodeIsValid = 'Your code is invalid';
 }
 
-class ApiKey {}
+class ApiKey {
+  static const String email = 'email';
+  static const String password = 'password';
+  static const String token = 'token';
+  static const String male = 'male';
+  static const String female = 'female';
+  static const String other = 'other';
+  static const String is_feature_athlete = 'is_feature_athlete';
+  static const String gender = 'gender';
+}

@@ -2,6 +2,8 @@ import 'package:base_bloc/components/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'colors.dart';
 
+var typoW300 = const TextStyle(
+    letterSpacing: 0.1, color: colorBlack, fontWeight: FontWeight.w300);
 var typoW400 = const TextStyle(
     letterSpacing: 0.1, color: colorBlack, fontWeight: FontWeight.w400);
 var typoW500 = const TextStyle(

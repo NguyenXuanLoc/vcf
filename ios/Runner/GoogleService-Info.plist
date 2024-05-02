@@ -2,20 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>65508793405-073kuj7c1tqmabrd288d2bsd9m039ufg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.65508793405-073kuj7c1tqmabrd288d2bsd9m039ufg</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>196505369658-am0ccl28ia6mm7dehvv35pmdnans0nrc.apps.googleusercontent.com</string>
+	<string>65508793405-4mp56030e5bc7frrsq5vnj64vd4fjutl.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDS3yF3lKtHNI2KzK8SzlqIPbdFrleIfSM</string>
+	<string>AIzaSyDvxQUNT3rUTFYG_X2TOqhfP1KaU1KanH8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>196505369658</string>
+	<string>65508793405</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>app.swayme.pl</string>
+	<string>app.vn.vcf</string>
 	<key>PROJECT_ID</key>
-	<string>swayme-8dfd1</string>
+	<string>vcfapp-26be6</string>
 	<key>STORAGE_BUCKET</key>
-	<string>swayme-8dfd1.appspot.com</string>
+	<string>vcfapp-26be6.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -27,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:196505369658:ios:b0e2f7e833cd042c9ac903</string>
+	<string>1:65508793405:ios:d6b4e43982f30d94b25e54</string>
 </dict>
 </plist>

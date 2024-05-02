@@ -2,15 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:base_bloc/config/constant.dart';
+import 'package:base_bloc/data/globals.dart';
 import 'package:base_bloc/gen/fonts.gen.dart';
 import 'package:base_bloc/router/application.dart';
 import 'package:base_bloc/router/router.dart';
 import 'package:base_bloc/utils/device_utils.dart';
+import 'package:base_bloc/utils/log_utils.dart';
+import 'package:base_bloc/utils/storage_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:flutter_facebook_keyhash/flutter_facebook_keyhash.dart';
 
 import 'localization/codegen_loader.g.dart';
 
@@ -21,6 +26,7 @@ void main() async {
         assetLoader: const Applocalizations(),
         supportedLocales: Applocalizations.supportedLocales,
         saveLocale: true,
+        fallbackLocale: Applocalizations.localeEn,
         path: 'assets/translations',
         child: const MyApp()),
   );
@@ -37,6 +43,16 @@ Future<void> configApp() async {
   configOrientation();
   await DeviceUtils.getDeviceId();
   await GetStorage.init();
+  StorageUtils.getLogin();
+  printKeyHash();
+}
+
+void printKeyHash() async {
+  String? key = await FlutterFacebookKeyhash.getFaceBookKeyHash ??
+      'Unknown platform version';
+  if (kDebugMode) {
+    print("TAG GET KEY HASH: $key");
+  }
 }
 
 void configOrientation() {
@@ -44,6 +60,8 @@ void configOrientation() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+      .copyWith(systemNavigationBarColor: Colors.black));
 }
 
 class MyApp extends StatefulWidget {

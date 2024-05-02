@@ -4,13 +4,13 @@ import 'package:base_bloc/base/hex_color.dart';
 import 'package:base_bloc/components/app_bar_widget.dart';
 import 'package:base_bloc/components/app_text.dart';
 import 'package:base_bloc/config/constant.dart';
-import 'package:base_bloc/localization/locale_keys.dart';
 import 'package:base_bloc/theme/colors.dart';
 import 'package:base_bloc/utils/log_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../generated/locale_keys.g.dart';
 import '../theme/app_styles.dart';
 import '../utils/connection_utils.dart';
 
@@ -25,7 +25,7 @@ class AppNotDataWidget extends StatefulWidget {
       this.message,
       this.onClick,
       this.isScroll = true,
-      this.isStack = true})
+      this.isStack = false})
       : super(key: key);
 
   @override
@@ -47,34 +47,9 @@ class _AppNotDataWidgetState extends State<AppNotDataWidget> {
         ? Text.rich(
             textAlign: TextAlign.center,
             TextSpan(
-                text: message,
-                style: typoSmallTextRegular.copyWith(),
-                children: [
-                  if (!isInternet) const TextSpan(text: "\n"),
-                  if (!isInternet)
-                    WidgetSpan(
-                        child: Material(
-                      color: colorTransparent,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Ink(
-                            decoration: BoxDecoration(
-                                color: HexColor('25C769'),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: InkWell(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 25, right: 25, top: 7, bottom: 7),
-                                    child: AppText(
-                                      LocaleKeys.retry.tr(),
-                                      style: typoW400.copyWith(
-                                          fontSize: 14, color: colorWhite),
-                                    )),
-                                onTap: () => buttonOnClick(context))),
-                      ),
-                    ))
-                ]))
+                text: message ?? LocaleKeys.network_error.tr(),
+                style: typoSmallTextRegular.copyWith(color: colorWhite),
+                children: []))
         : Stack(children: [
             if (widget.isScroll)
               ListView(physics: const AlwaysScrollableScrollPhysics()),
@@ -82,34 +57,10 @@ class _AppNotDataWidgetState extends State<AppNotDataWidget> {
                 child: Text.rich(
                     textAlign: TextAlign.center,
                     TextSpan(
-                        text: '$message\n',
-                        style: typoSmallTextRegular.copyWith(),
-                        children: [
-                          if (!isInternet)
-                            WidgetSpan(
-                                child: Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                    color: HexColor('25C769'),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: InkWell(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 25,
-                                            right: 25,
-                                            top: 7,
-                                            bottom: 7),
-                                        child: AppText(
-                                          LocaleKeys.retry.tr(),
-                                          style: typoW400.copyWith(
-                                              fontSize: 14, color: colorWhite),
-                                        )),
-                                    onTap: () => buttonOnClick(context)),
-                              ),
-                            ))
-                        ])))
+                        text: message ?? LocaleKeys.network_error.tr(),
+                        style:
+                            typoW400.copyWith(fontSize: 14, color: colorWhite),
+                        children: const [])))
           ]);
   }
 

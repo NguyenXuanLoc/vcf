@@ -13,31 +13,15 @@ class Applocalizations extends AssetLoader {
   const Applocalizations();
 
   static const enCode = 'en';
-  static const plCode = 'pl';
-  static const ruCode = 'ru';
-  static const uaCode = 'uk';
-  static const deCode = 'de';
 
   static const languageCode = {
     enCode: 'eng',
-    plCode: plCode,
-    deCode: deCode,
-    ruCode: ruCode,
-    uaCode: 'ua'
   };
 
   static const localeEn = Locale(enCode);
-  static const localePl = Locale(plCode);
-  static const localeRu = Locale(ruCode);
-  static const localeUa = Locale(uaCode);
-  static const localeDe = Locale(deCode);
 
   static const List<Locale> supportedLocales = <Locale>[
     localeEn,
-    localePl,
-    localeRu,
-    localeUa,
-    localeDe
   ];
 
   @override
@@ -47,23 +31,16 @@ class Applocalizations extends AssetLoader {
   }
 
   Future<Map<String, dynamic>> getLanguage(String fileName) async {
-    String str = await rootBundle.loadString('assets/translations/$fileName.json');
+    String str =
+        await rootBundle.loadString('assets/translations/$fileName.json');
     return json.decode(str);
   }
 
   Future<Map<String, Map<String, dynamic>>> getLocales() async {
     var englishLanguage = await getLanguage(enCode);
-    var polishLanguage = await getLanguage(plCode);
-    var germanyLanguage = await getLanguage(deCode);
-    var russianLanguage = await getLanguage(ruCode);
-    var ukraineLanguage = await getLanguage(uaCode);
+
     return {
       enCode: englishLanguage,
-      plCode: polishLanguage,
-      uaCode: ukraineLanguage,
-      ruCode: russianLanguage,
-      deCode: germanyLanguage
     };
   }
-
 }

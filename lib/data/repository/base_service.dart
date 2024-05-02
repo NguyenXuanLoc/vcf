@@ -1,25 +1,25 @@
 import 'dart:convert';
 
+import 'package:base_bloc/utils/log_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
-import '../../localization/locale_keys.dart';
+import '../../generated/locale_keys.g.dart';
 import '../../utils/connection_utils.dart';
 import '../globals.dart' as globals;
 import 'api_result.dart';
 
 class BaseService {
-  var baseUrl = 'https://api.swayme.pl/api/v1/';
+  var baseUrl = 'http://103.104.117.196/api/v1/';
 
   void initProvider() {}
 
   // ignore: non_constant_identifier_names
   Future<ApiResult> GET(String url,
-      {Map<String, dynamic>? queryParam,
+      {Map<String, dynamic>? jsonParam,
       bool isNewFormat = false,
-      bool isToken = true,
       String baseUrl = ''}) async {
     if (await ConnectionUtils.isConnect() == false) {
       return ApiResult(error: LocaleKeys.network_error.tr());
@@ -27,20 +27,18 @@ class BaseService {
     debugPrint('============================================================');
     debugPrint('[GET] ${this.baseUrl}$url');
     debugPrint("Bearer ${globals.accessToken}");
-    debugPrint("Language ${globals.lang}");
+    debugPrint("BODY ${jsonParam != null ? json.encode(jsonParam) : ''}");
     try {
       var header = {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${globals.accessToken}'
       };
       header['Authorization'] = 'Bearer ${globals.accessToken}';
       final response = await Dio()
-          .get(
+          .request(
             this.baseUrl + url,
-            queryParameters: queryParam,
-            options: Options(
-                headers: header,
-                sendTimeout:
-                    globals.timeOut /*,receiveTimeout: globals.timeOut*/),
+            data: jsonParam != null ? json.encode(jsonParam) : null,
+            options: Options(method: 'GET', headers: header),
           )
           .timeout(Duration(seconds: globals.timeOut));
       Logger().d(response.data);
@@ -161,7 +159,7 @@ class BaseService {
         return ApiResult<dynamic>(
             data: isNewFormat ? result : result['data'],
             statusCode: response.statusCode,
-            message: result['meta']?['message'] ?? '');
+            message: result['message'] ?? '');
       } else {
         Logger().e(
             'Error ${response.statusCode} - ${response.statusMessage} - ${response.data}');
@@ -175,7 +173,9 @@ class BaseService {
       Logger().e('[EXCEPTION] ${exception.response} ${exception.message}');
       debugPrint(
           '============================================================');
-      return ApiResult<dynamic>(error: LocaleKeys.network_error.tr());
+      return ApiResult<dynamic>(
+          error: exception.response?.data['message'] ??
+              LocaleKeys.network_error.tr());
     } catch (error) {
       Logger().e('[ERROR] ' + error.toString());
       debugPrint(
