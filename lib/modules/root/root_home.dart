@@ -5,16 +5,15 @@ import 'package:flutter/cupertino.dart';
 import '../../router/application.dart';
 
 class RootHome extends StatefulWidget {
-  const RootHome({Key? key}) : super(key: key);
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  const RootHome({Key? key, required this.navigatorKey}) : super(key: key);
 
   @override
   State<RootHome> createState() => _RootHomeState();
 }
 
 class _RootHomeState extends State<RootHome> {
-  final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey(debugLabel: 'RootCategoryPageNavigatorState');
-
   @override
   void initState() {
     final router = FluroRouter();
@@ -25,13 +24,9 @@ class _RootHomeState extends State<RootHome> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        child: Navigator(
-          key: navigatorKey,
-          onGenerateRoute: Application.routerHome.generator,
-        ),
-        onWillPop: () async {
-          return !navigatorKey.currentState!.canPop();
-        });
+    return Navigator(
+      key: widget.navigatorKey,
+      onGenerateRoute: Application.routerHome.generator,
+    );
   }
 }

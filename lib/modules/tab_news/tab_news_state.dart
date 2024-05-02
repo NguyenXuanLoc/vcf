@@ -1,8 +1,26 @@
 import 'package:equatable/equatable.dart';
 
+import '../../data/model/news_model.dart';
+
 class TabNewsState extends Equatable {
-  const TabNewsState();
+  final bool isReadEnd;
+  final bool isLoading;
+  final List<NewsModel> lNews;
+
+  const TabNewsState(
+      {this.isReadEnd = false, this.isLoading = false, this.lNews = const []});
+
+  TabNewsState copyOf(
+          {List<String>? lMale,
+          String? male,
+          bool? isLoading,
+          bool? isReadEnd,
+          List<NewsModel>? lNews}) =>
+      TabNewsState(
+          isLoading: isLoading ?? this.isLoading,
+          isReadEnd: isReadEnd ?? this.isReadEnd,
+          lNews: lNews ?? this.lNews);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [isLoading, isReadEnd, lNews];
 }

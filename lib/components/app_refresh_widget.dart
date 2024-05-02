@@ -1,4 +1,5 @@
 import 'package:base_bloc/base/hex_color.dart';
+import 'package:base_bloc/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppRefreshWidget extends StatelessWidget {
@@ -12,7 +13,7 @@ class AppRefreshWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-        color: HexColor('25C869').withOpacity(0.5),
+        color: colorPrimaryBrand100,
         child: child,
         onRefresh: () async {
           await Future.delayed(const Duration(milliseconds: 400));

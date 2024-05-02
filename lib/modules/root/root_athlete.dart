@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import '../../router/application.dart';
 
 class RootAthlete extends StatefulWidget {
-  const RootAthlete({Key? key}) : super(key: key);
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  const RootAthlete({Key? key, required this.navigatorKey}) : super(key: key);
 
   @override
   State<RootAthlete> createState() => _RootAthleteState();
@@ -25,13 +27,9 @@ class _RootAthleteState extends State<RootAthlete> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        child: Navigator(
-          key: navigatorKey,
-          onGenerateRoute: Application.routerAthlete.generator,
-        ),
-        onWillPop: () async {
-          return !navigatorKey.currentState!.canPop();
-        });
+    return Navigator(
+      key: navigatorKey,
+      onGenerateRoute: Application.routerAthlete.generator,
+    );
   }
 }

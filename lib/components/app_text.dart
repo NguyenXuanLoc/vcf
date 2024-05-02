@@ -8,7 +8,8 @@ class AppText extends StatelessWidget {
   final int? maxLine;
   final TextOverflow? overflow;
 
-  const AppText(this.msg, {Key? key, this.style, this.textAlign, this.maxLine, this.overflow})
+  const AppText(this.msg,
+      {Key? key, this.style, this.textAlign, this.maxLine, this.overflow})
       : super(key: key);
 
   @override
@@ -18,7 +19,7 @@ class AppText extends StatelessWidget {
       style: style ?? typoNormalTextRegular,
       textScaleFactor: 1,
       textAlign: textAlign,
-      overflow: overflow,
+      // overflow: overflow ?? TextOverflow.ellipsis,
       maxLines: maxLine,
     );
   }

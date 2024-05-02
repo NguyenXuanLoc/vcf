@@ -5,17 +5,23 @@ import '../base/hex_color.dart';
 import '../theme/colors.dart';
 
 class AppCircleLoading extends StatelessWidget {
-  const AppCircleLoading({Key? key}) : super(key: key);
+  final bool isCenter;
+  final double? height;
+
+  const AppCircleLoading({Key? key, this.isCenter = true, this.height})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 24,
-      height: 24,
-      child: CircularProgressIndicator(
-        color: HexColor('25C869').withOpacity(0.9),
-        strokeWidth: 2.0,
-      ),
+    return Container(
+      height: height,
+      alignment: isCenter ? Alignment.center : null,
+      child: Container(
+          alignment: isCenter ? Alignment.center : null,
+          width: 24,
+          height: 24,
+          child: const CircularProgressIndicator(
+              color: colorWhite, strokeWidth: 2.0)),
     );
   }
 }

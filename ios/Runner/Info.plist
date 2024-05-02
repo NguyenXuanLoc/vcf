@@ -28,11 +28,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>app.swayme.pl</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>swayme.pl</string>
-			</array>
+			<string>app.vn.vcf</string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -42,19 +38,20 @@
 	<key>FacebookAdvertiserIDCollectionEnabled</key>
 	<false/>
 	<key>FacebookAppID</key>
-	<string>354337667062264</string>
+	<string>319597411156155</string>
 	<key>FacebookAutoLogAppEventsEnabled</key>
 	<false/>
 	<key>FacebookClientToken</key>
-	<string>d414284fe7f683725d4e4c1c22a7172e</string>
+	<string>5cdff14b545ecfd33503db76d19b6dc6</string>
 	<key>FacebookDisplayName</key>
-	<string>Sway me</string>
+	<string>VCF</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+     	<string>fbapi</string>
 		<string>instagram</string>
 		<string>comgooglemaps</string>
 	</array>
