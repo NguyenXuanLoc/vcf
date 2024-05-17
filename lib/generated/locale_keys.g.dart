@@ -71,6 +71,7 @@ abstract class  LocaleKeys {
   static const input_email = 'input_email';
   static const do_not_you_have_acc = 'do_not_you_have_acc';
   static const please_input_email = 'please_input_email';
+  static const please_input_phone = 'please_input_phone';
   static const please_input_full_name = 'please_input_full_name';
   static const please_input_valid_email = 'please_input_valid_email';
   static const please_input_pass = 'please_input_pass';
@@ -78,5 +79,11 @@ abstract class  LocaleKeys {
   static const logout = 'logout';
   static const Male = 'Male';
   static const FeMale = 'FeMale';
+  static const Not_data_please_try_again = 'Not_data_please_try_again';
+  static const Round = 'Round';
+  static const phone_is_not_valid = 'phone_is_not_valid';
+  static const old_pass_is_not_valid = 'old_pass_is_not_valid';
+  static const take_photo = 'take_photo';
+  static const pick_photo_from_gallery = 'pick_photo_from_gallery';
 
 }

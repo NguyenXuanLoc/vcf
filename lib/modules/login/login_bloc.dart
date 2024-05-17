@@ -25,7 +25,7 @@ class LoginBloc extends BaseCubit<LoginState> {
   var passController = TextEditingController();
 
   LoginBloc() : super(LoginState()) {
-    fakeData();
+    // fakeData();
   }
 
   void fakeData() {
@@ -54,7 +54,8 @@ class LoginBloc extends BaseCubit<LoginState> {
         await Dialogs.hideLoadingDialog();
         toast(response.error.toString());
       } else {
-        StorageUtils.saveLogin(response.data[ApiKey.token]);
+        StorageUtils.saveLogin(response.data[ApiKey.token],
+            emailController.text, passController.text);
         var userResponse = await repository.getUserProfile();
         await Dialogs.hideLoadingDialog();
         if (userResponse.error == null) {
@@ -98,7 +99,7 @@ class LoginBloc extends BaseCubit<LoginState> {
 
     // Create a credential from the access token
     final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+        FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
     var credential = await FirebaseAuth.instance
         .signInWithCredential(facebookAuthCredential);
     logE(

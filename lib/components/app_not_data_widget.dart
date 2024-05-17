@@ -1,11 +1,4 @@
-import 'dart:async';
-
-import 'package:base_bloc/base/hex_color.dart';
-import 'package:base_bloc/components/app_bar_widget.dart';
-import 'package:base_bloc/components/app_text.dart';
-import 'package:base_bloc/config/constant.dart';
 import 'package:base_bloc/theme/colors.dart';
-import 'package:base_bloc/utils/log_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,13 +34,24 @@ class _AppNotDataWidgetState extends State<AppNotDataWidget> {
     super.initState();
   }
 
+  void checkConnection() async {
+    if (await ConnectionUtils.isConnect() == false) {
+      message = LocaleKeys.network_error;
+      isInternet = false;
+      setState(() {});
+    } else {
+      message = widget.message ?? LocaleKeys.Not_data_please_try_again;
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return !widget.isStack
         ? Text.rich(
             textAlign: TextAlign.center,
             TextSpan(
-                text: message ?? LocaleKeys.network_error.tr(),
+                text: (message ?? LocaleKeys.Not_data_please_try_again).tr(),
                 style: typoSmallTextRegular.copyWith(color: colorWhite),
                 children: []))
         : Stack(children: [
@@ -57,7 +61,8 @@ class _AppNotDataWidgetState extends State<AppNotDataWidget> {
                 child: Text.rich(
                     textAlign: TextAlign.center,
                     TextSpan(
-                        text: message ?? LocaleKeys.network_error.tr(),
+                        text: message ??
+                            LocaleKeys.Not_data_please_try_again.tr(),
                         style:
                             typoW400.copyWith(fontSize: 14, color: colorWhite),
                         children: const [])))

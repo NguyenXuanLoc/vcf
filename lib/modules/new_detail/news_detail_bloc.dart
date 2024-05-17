@@ -1,15 +1,14 @@
-import 'dart:async';
-
+import 'package:base_bloc/base/base_cubit.dart';
+import 'package:base_bloc/data/model/news_detail_model.dart';
 import 'package:base_bloc/data/model/news_model.dart';
 import 'package:base_bloc/modules/new_detail/news_detail_state.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/constant.dart';
 import '../../router/router.dart';
 import '../../router/router_utils.dart';
 
-class NewsDetailBloc extends Cubit<NewsDetailState> {
+class NewsDetailBloc extends BaseCubit<NewsDetailState> {
   var controller = ScrollController();
   final NewsModel model;
 
@@ -21,12 +20,13 @@ class NewsDetailBloc extends Cubit<NewsDetailState> {
         getRelatedAthlete(isPaging: true);
       }
     });
-    getNews(model);
+    state.newsModel = model;
+    getNewsDetail();
   }
 
   void onRefresh() {
-    emit(const NewsDetailState());
-    getNews(model);
+    emit(NewsDetailState(newsModel: state.newsModel));
+    getNewsDetail();
   }
 
   void itemOnClick(NewsModel model, BuildContext context) {
@@ -36,99 +36,41 @@ class NewsDetailBloc extends Cubit<NewsDetailState> {
         argument: [model, BottomNavigationConstant.TAB_PROFILE]);
   }
 
-  void getNews(NewsModel model) {
+  void getNewsDetail() async {
     emit(state.copyOf(isNewsLoading: true));
-    Timer(const Duration(seconds: 1), () {
-      emit(state.copyOf(newsModel: model, isNewsLoading: false));
-      getRelatedAthlete();
-    });
+    try {
+      var response =
+          await repository.getNewsDetailById(state.newsModel?.slug ?? '');
+      if (response.error == null) {
+        var newsDetailModel = NewsDetailModel.fromJson(response.data);
+        emit(state.copyOf(
+            newsDetailModel: newsDetailModel, isNewsLoading: false));
+        getRelatedAthlete();
+      }
+    } catch (ex) {
+      emit(state.copyOf(isNewsLoading: false));
+    }
   }
 
-  void getRelatedAthlete({bool isPaging = false}) {
-    if (state.isRelatedLoading || state.isRelatedReadEnd) return;
+  void getRelatedAthlete({bool isPaging = false}) async {
+    if (state.isRelatedLoading) return;
     emit(state.copyOf(isRelatedLoading: true));
-    Timer(
-        const Duration(seconds: 1),
-        () => emit(state.copyOf(
+    try {
+      var response = await repository.getPost(nextPage: state.nextPage);
+      if (response.error == null) {
+        var lNews = newsModelFromJson(response.data)
+            .where((element) => element.id != state.newsModel?.id)
+            .toList();
+        emit(state.copyOf(
+            nextPage: state.nextPage + 1,
             isRelatedLoading: false,
-            isRelatedReadEnd: state.lRelated.length > 20,
-            lRelated: !isPaging
-                ? lNews().toList(growable: true)
-                : (state.lRelated..addAll(lNews())))));
+            lRelated: isPaging ? (state.lRelated..addAll(lNews)) : lNews,
+            isRelatedReadEnd: lNews.isEmpty));
+      } else {
+        emit(state.copyOf(isRelatedLoading: false));
+      }
+    } catch (ex) {
+      emit(state.copyOf(isRelatedLoading: false));
+    }
   }
-
-  List<NewsModel> lNews() => [
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Giải địa hình Bến Tre mở rộng',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Giải địa hình Bến Tre mở nhỏ',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Giải đá gà Bến Tre mở rộng',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS')
-      ];
 }

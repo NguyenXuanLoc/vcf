@@ -10,15 +10,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../data/model/tournament_model.dart';
+import '../data/model/race_model.dart';
 import '../gen/assets.gen.dart';
 import 'distance_widget.dart';
 
-class ItemTournamentNewsWidget extends StatelessWidget {
-  final TournamentModel model;
+class ItemRaceNewsWidget extends StatelessWidget {
+  final RaceModel model;
   final VoidCallback itemOnClick;
 
-  const ItemTournamentNewsWidget(
+  const ItemRaceNewsWidget(
       {super.key, required this.model, required this.itemOnClick});
 
   @override
@@ -38,8 +38,8 @@ class ItemTournamentNewsWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       child: AspectRatio(
                           aspectRatio: 152 / 102,
-                          child: AppNetworkImage(source: model.poster)))),
-              DistanceWidget(distance: model.distance, isMargin: true),
+                          child: AppNetworkImage(source: model.photo)))),
+              DistanceWidget(distance: model.distance ?? 1, isMargin: true),
             ]),
             const SizedBox(width: 16),
             Expanded(
@@ -47,15 +47,15 @@ class ItemTournamentNewsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AppText(model.name,
+                  AppText(model.name ?? '',
                       style:
                           typoW500.copyWith(color: colorWhite, fontSize: 18)),
-                  itemWidget(LocaleKeys.Place.tr(), model.address),
+                  itemWidget(LocaleKeys.Place.tr(), model.location ?? ''),
                   itemWidget(LocaleKeys.DateTime.tr(),
-                      Utils.formatDateFromAToB(model.dateTime, model.dateTime)),
+                      Utils.formatDateFromAToB(model.raceDate, model.raceDate)),
                   itemWidget(LocaleKeys.Participation_fee.tr(),
                       Utils.formatMoney(model.price)),
-                  itemWidget(LocaleKeys.Donors.tr(), model.donors,
+                  itemWidget(LocaleKeys.Donors.tr(), model.sponsor ?? '',
                       isBackIcon: true),
                 ],
               ),

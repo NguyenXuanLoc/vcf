@@ -3,7 +3,7 @@ import 'package:base_bloc/components/app_network_image.dart';
 import 'package:base_bloc/components/app_text.dart';
 import 'package:base_bloc/components/gradient_button.dart';
 import 'package:base_bloc/data/globals.dart';
-import 'package:base_bloc/data/model/tournament_model.dart';
+import 'package:base_bloc/data/model/race_model.dart';
 import 'package:base_bloc/theme/app_styles.dart';
 import 'package:base_bloc/theme/colors.dart';
 import 'package:extended_image/extended_image.dart';
@@ -16,7 +16,7 @@ import '../utils/app_utils.dart';
 import 'distance_widget.dart';
 
 class ItemTournamentWidget extends StatelessWidget {
-  final TournamentModel model;
+  final RaceModel model;
   final VoidCallback itemOnClick;
 
   const ItemTournamentWidget(
@@ -37,7 +37,7 @@ class ItemTournamentWidget extends StatelessWidget {
                     height: width * 0.67,
                     child: Stack(alignment: Alignment.bottomLeft, children: [
                       Positioned.fill(
-                          child: AppNetworkImage(source: model.poster)),
+                          child: AppNetworkImage(source: model.photo)),
                       Positioned.fill(
                           child: SvgPicture.asset(
                               Assets.svg.icOverlayTournament,
@@ -49,16 +49,16 @@ class ItemTournamentWidget extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                DistanceWidget(distance: model.distance),
+                                DistanceWidget(distance: model.distance??0),
                                 space(),
-                                AppText(model.name,
+                                AppText(model.name ?? '',
                                     maxLine: 1,
                                     style: typoW700.copyWith(
                                         fontSize: 12, color: colorWhite)),
                                 space(),
                                 AppText(
                                     Utils.formatDateFromAToB(
-                                        model.dateTime, model.dateTime),
+                                        model.raceDate, model.raceDate),
                                     style: typoW400.copyWith(
                                         fontSize: 9, color: colorWhite))
                               ]))

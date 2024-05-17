@@ -1,4 +1,5 @@
 import 'package:base_bloc/base/base_state.dart';
+import 'package:base_bloc/components/app_network_image.dart';
 import 'package:base_bloc/components/app_text_button.dart';
 import 'package:base_bloc/components/gradient_text.dart';
 import 'package:base_bloc/components/line_widget.dart';
@@ -140,11 +141,23 @@ class _PersonInfoPageState extends BaseState<PersonInfoPage, PersonInfoBloc> {
         ),
       );
 
+  Widget defaultImage() => Image.asset(Assets.png.icDefaultAvatar.path);
+
   List<Widget> userInfoWidget() => [
-        SizedBox(
-            width: 85,
-            height: 85,
-            child: Image.asset(Assets.png.icDefaultAvatar.path)),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: SizedBox(
+              width: 85,
+              height: 85,
+              child: BlocBuilder<PersonInfoBloc, PersonInfoState>(
+                  builder: (c, state) =>
+                      (state.userModel?.avatar ?? '').isNotEmpty
+                          ? AppNetworkImage(
+                              source: state.userModel?.avatar ?? '',
+                              errorWidget: defaultImage())
+                          : defaultImage(),
+                  bloc: bloc)),
+        ),
         space(),
         BlocBuilder<PersonInfoBloc, PersonInfoState>(
             builder: (c, state) => AppText(
@@ -174,6 +187,12 @@ class _PersonInfoPageState extends BaseState<PersonInfoPage, PersonInfoBloc> {
 
   @override
   PersonInfoBloc createCubit() => PersonInfoBloc();
+
+  @override
+  void dispose() {
+    bloc.onDispose();
+    super.dispose();
+  }
 
   @override
   void init() {}

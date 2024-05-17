@@ -76,7 +76,7 @@ class _ForgotPassPageState extends BaseState<ForgotPassPage, ForgotPassBloc> {
   }
 
   List<Widget> itemWidget(String title,
-          {TextInputAction textInputAction = TextInputAction.next,
+          {TextInputAction textInputAction = TextInputAction.done,
           required ItemType itemType,
           required TextEditingController controller,
           required Function(String) onChange}) =>
@@ -90,6 +90,7 @@ class _ForgotPassPageState extends BaseState<ForgotPassPage, ForgotPassBloc> {
         space(height: 10),
         BlocBuilder<ForgotPassBloc, ForgotPassState>(
             builder: (c, state) => AppTextField(
+                errorText: state.errorEmail,
                 onChanged: (text) => onChange.call(text),
                 controller: controller,
                 obscureText:

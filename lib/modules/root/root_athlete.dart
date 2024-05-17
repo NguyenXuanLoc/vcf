@@ -14,9 +14,6 @@ class RootAthlete extends StatefulWidget {
 }
 
 class _RootAthleteState extends State<RootAthlete> {
-  final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey(debugLabel: 'RootCategoryPageNavigatorState');
-
   @override
   void initState() {
     final router = FluroRouter();
@@ -28,8 +25,7 @@ class _RootAthleteState extends State<RootAthlete> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      key: navigatorKey,
-      onGenerateRoute: Application.routerAthlete.generator,
-    );
+        key: widget.navigatorKey,
+        onGenerateRoute: Application.routerAthlete.generator);
   }
 }

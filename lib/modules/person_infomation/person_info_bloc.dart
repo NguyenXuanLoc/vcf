@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:base_bloc/components/dialogs.dart';
 import 'package:base_bloc/data/globals.dart';
 import 'package:base_bloc/generated/locale_keys.g.dart';
@@ -11,15 +13,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../data/eventbus/refresh_event.dart';
+import '../../utils/app_utils.dart';
+
 class PersonInfoBloc extends Cubit<PersonInfoState> {
+  StreamSubscription<RefreshEvent>? refreshEvent;
+
   PersonInfoBloc() : super(PersonInfoState()) {
     getCurrentVersion();
     getUserInfo();
+    refreshEvent = Utils.eventBus.on<RefreshEvent>().listen((event) {
+      getUserInfo();
+    });
   }
 
   void getUserInfo() async {
     var user = await StorageUtils.getUserInfo();
-    emit(state.copyOf(userModel: user));
+    emit(state.copyOf(userModel: user, isRefresh: !state.isRefresh));
   }
 
   void getCurrentVersion() async {
@@ -36,5 +46,9 @@ class PersonInfoBloc extends Cubit<PersonInfoState> {
       StorageUtils.logout();
       RouterUtils.pushTo(homeContext, HomePage(), isReplace: true);
     });
+  }
+
+  void onDispose() {
+    refreshEvent?.cancel();
   }
 }

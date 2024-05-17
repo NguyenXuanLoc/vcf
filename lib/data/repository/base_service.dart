@@ -4,6 +4,7 @@ import 'package:base_bloc/utils/log_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 import '../../generated/locale_keys.g.dart';
@@ -12,9 +13,106 @@ import '../globals.dart' as globals;
 import 'api_result.dart';
 
 class BaseService {
-  var baseUrl = 'http://103.104.117.196/api/v1/';
+  var baseUrl = 'https://vcf.novatic.com.vn/api/v1/';
 
   void initProvider() {}
+
+  // ignore: non_constant_identifier_names
+  Future<ApiResult> GET_WITH_HTTP_LIB(String url,
+      {Map<String, dynamic>? jsonParam,
+      bool isNewFormat = false,
+      String baseUrl = ''}) async {
+    if (await ConnectionUtils.isConnect() == false) {
+      return ApiResult(error: LocaleKeys.network_error.tr());
+    }
+    debugPrint('============================================================');
+    debugPrint('[GET] ${this.baseUrl}$url');
+    debugPrint("Bearer ${globals.accessToken}");
+    debugPrint("BODY ${jsonParam != null ? json.encode(jsonParam) : ''}");
+    try {
+      var header = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${globals.accessToken}'
+      };
+      var request = http.Request('GET', Uri.parse(this.baseUrl + url));
+      request.body = json.encode(jsonParam);
+      request.headers.addAll(header);
+      http.StreamedResponse response = await request.send();
+      var responseData = await response.stream.bytesToString();
+      Logger().d(responseData);
+      if ((response.statusCode == 200 || response.statusCode == 201) &&
+          responseData != null) {
+        var result = json.decode(responseData);
+        return ApiResult<dynamic>(
+            data: isNewFormat ? result : result['data'],
+            statusCode: response.statusCode);
+      } else {
+        Logger().e('Error ${response.statusCode} }');
+        var result = json.decode(responseData);
+        return ApiResult<dynamic>(
+          error: result["message"] ?? '',
+          data: result,
+        );
+      }
+    } on DioError catch (exception) {
+      Logger().e('[EXCEPTION] ${exception.response}');
+      debugPrint(
+          '============================================================');
+      return ApiResult<dynamic>(error: LocaleKeys.network_error.tr());
+    } catch (error) {
+      Logger().e('[ERROR] ' + error.toString());
+      debugPrint(
+          '============================================================');
+      return ApiResult<dynamic>(error: LocaleKeys.network_error.tr());
+    }
+  }
+
+  Future<ApiResult> POST_WITH_MULTI_PATH_REQUEST_HTTP_LIB(String url,
+      {required Map<String, dynamic> jsonParam}) async {
+    if (await ConnectionUtils.isConnect() == false) {
+      return ApiResult(error: LocaleKeys.network_error.tr());
+    }
+    debugPrint('============================================================');
+    debugPrint('[POST] ${this.baseUrl}$url');
+    debugPrint("Bearer ${globals.accessToken}");
+    debugPrint("BODY ${jsonParam != null ? json.encode(jsonParam) : ''}");
+    try {
+      var header = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${globals.accessToken}'
+      };
+      var request = http.MultipartRequest('POST', Uri.parse(baseUrl + url));
+      request.files.add(await http.MultipartFile.fromPath(
+          jsonParam.keys.first, jsonParam.values.first));
+      request.headers.addAll(header);
+      http.StreamedResponse response = await request.send();
+      var responseData = await response.stream.bytesToString();
+      Logger().d(responseData);
+      if ((response.statusCode == 200 || response.statusCode == 201) &&
+          responseData != null) {
+        var result = json.decode(responseData);
+        return ApiResult<dynamic>(
+            data: result['data'], statusCode: response.statusCode);
+      } else {
+        Logger().e('Error ${response.statusCode} }');
+        var result = json.decode(responseData);
+        return ApiResult<dynamic>(
+          error: result["message"] ?? '',
+          data: result,
+        );
+      }
+    } on DioError catch (exception) {
+      Logger().e('[EXCEPTION] ${exception.response}');
+      debugPrint(
+          '============================================================');
+      return ApiResult<dynamic>(error: LocaleKeys.network_error.tr());
+    } catch (error) {
+      Logger().e('[ERROR] ' + error.toString());
+      debugPrint(
+          '============================================================');
+      return ApiResult<dynamic>(error: LocaleKeys.network_error.tr());
+    }
+  }
 
   // ignore: non_constant_identifier_names
   Future<ApiResult> GET(String url,
@@ -33,27 +131,24 @@ class BaseService {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${globals.accessToken}'
       };
-      header['Authorization'] = 'Bearer ${globals.accessToken}';
       final response = await Dio()
-          .request(
-            this.baseUrl + url,
-            data: jsonParam != null ? json.encode(jsonParam) : null,
-            options: Options(method: 'GET', headers: header),
-          )
+          .get(this.baseUrl + url,
+              options: Options(headers: header))
           .timeout(Duration(seconds: globals.timeOut));
       Logger().d(response.data);
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           response.data != null) {
         var result = response.data;
         return ApiResult<dynamic>(
-            data: isNewFormat ? result : result['data'],
+            message: result['message'],
+            data: result['data'],
             statusCode: response.statusCode);
       } else {
         Logger().e(
             'Error ${response.statusCode} - ${response.statusMessage} - ${response.data}');
         var result = response.data;
         return ApiResult<dynamic>(
-          error: result["meta"]["message"] ?? response.statusMessage ?? '',
+          error: result["message"] ?? response.statusMessage ?? '',
           data: result,
         );
       }
@@ -85,13 +180,10 @@ class BaseService {
           .patch(
             url,
             data: body,
-            options: Options(
-              headers: {
-                'Authorization': 'Bearer ${globals.accessToken}',
-                'Content-Type': 'application/json',
-              },
-              sendTimeout: globals.timeOut, /* receiveTimeout: globals.timeOut*/
-            ),
+            options: Options(headers: {
+              'Authorization': 'Bearer ${globals.accessToken}',
+              'Content-Type': 'application/json',
+            }),
           )
           .timeout(Duration(seconds: globals.timeOut));
       Logger().d(response.data);
@@ -99,15 +191,15 @@ class BaseService {
           response.data != null) {
         var result = response.data;
         return ApiResult<dynamic>(
+            message: result['message'],
             data: result['data'],
-            statusCode: response.statusCode,
-            message: result['meta']['message'] ?? '');
+            statusCode: response.statusCode);
       } else {
         Logger().e(
             'Error ${response.statusCode} - ${response.statusMessage} - ${response.data}');
         var result = response.data;
         return ApiResult<dynamic>(
-          error: result["meta"]["message"] ?? response.statusMessage ?? '',
+          error: result["message"] ?? response.statusMessage ?? '',
           data: result,
         );
       }
@@ -127,7 +219,6 @@ class BaseService {
   // ignore: non_constant_identifier_names
   Future<ApiResult> POST(String url, dynamic body,
       {String baseUrl = '',
-      bool isNewFormat = false,
       String token = ''}) async {
     if (await ConnectionUtils.isConnect() == false) {
       return ApiResult(error: LocaleKeys.network_error.tr());
@@ -143,36 +234,34 @@ class BaseService {
             'Bearer ${token.isNotEmpty ? token : globals.accessToken}',
         'Content-Type': 'application/json',
       };
+
       final response = await Dio()
           .post(this.baseUrl + url,
               data: body is FormData ? body : json.encode(body),
-              options: Options(
-                headers: headers,
-                sendTimeout:
-                    globals.timeOut, /*receiveTimeout: globals.timeOut*/
-              ))
+              options: Options(headers: headers))
           .timeout(Duration(seconds: globals.timeOut));
       Logger().d(response.data);
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           response.data != null) {
         var result = response.data;
         return ApiResult<dynamic>(
-            data: isNewFormat ? result : result['data'],
-            statusCode: response.statusCode,
-            message: result['message'] ?? '');
+            message: result['message'],
+            data: result['data'],
+            statusCode: response.statusCode);
       } else {
         Logger().e(
             'Error ${response.statusCode} - ${response.statusMessage} - ${response.data}');
         var result = response.data;
         return ApiResult<dynamic>(
-          error: result["meta"]["message"] ?? response.statusMessage ?? '',
+          error: result["message"] ?? response.statusMessage ?? '',
           data: result,
         );
       }
     } on DioError catch (exception) {
-      Logger().e('[EXCEPTION] ${exception.response} ${exception.message}');
+      Logger().e('[EXCEPTION] ${exception.response}');
       debugPrint(
           '============================================================');
+      logE("TAG ERROR: ${exception.response?.data['message']}");
       return ApiResult<dynamic>(
           error: exception.response?.data['message'] ??
               LocaleKeys.network_error.tr());
@@ -191,14 +280,14 @@ class BaseService {
       return ApiResult(error: LocaleKeys.network_error.tr());
     }
     debugPrint('============================================================');
-    debugPrint('[PUT] ' + baseUrl! + url);
-    debugPrint('[PARAMS] ' + body.toString());
+    debugPrint('[PUT] ' + this.baseUrl + url);
+    debugPrint('[PARAMS] ' + json.encode(body));
+    debugPrint('Bearer ${globals.accessToken}');
     try {
       final response = await Dio()
-          .put(url,
-              data: body,
+          .put(this.baseUrl + url,
+              data: json.encode(body),
               options: Options(
-                sendTimeout: globals.timeOut,
                 headers: {
                   'Authorization': 'Bearer ${globals.accessToken}',
                   'Content-Type': 'application/json',
@@ -210,20 +299,25 @@ class BaseService {
           response.data != null) {
         var result = response.data;
         return ApiResult<dynamic>(
+            message: result['message'],
             data: result['data'],
-            statusCode: response.statusCode,
-            message: result['meta']['message'] ?? '');
+            statusCode: response.statusCode);
       } else {
         Logger().e(
             'Error ${response.statusCode} - ${response.statusMessage} - ${response.data}');
         var result = response.data;
         return ApiResult<dynamic>(
-          error: result["meta"]["message"] ?? response.statusMessage ?? '',
+          error: result["message"] ?? response.statusMessage ?? '',
           data: result,
         );
       }
     } on DioError catch (exception) {
-      Logger().e('[EXCEPTION] ${exception.response}');
+      Logger().e('[EXCEPTION] ${exception.response} ${exception}');
+      debugPrint(
+          '============================================================');
+      return ApiResult<dynamic>(error: LocaleKeys.network_error.tr());
+    } catch (error) {
+      Logger().e('[ERROR] ' + error.toString());
       debugPrint(
           '============================================================');
       return ApiResult<dynamic>(error: LocaleKeys.network_error.tr());
@@ -242,7 +336,7 @@ class BaseService {
     try {
       final response = await Dio()
           .delete(url,
-              options: Options(sendTimeout: globals.timeOut, headers: {
+              options: Options(headers: {
                 'Authorization': 'Bearer ${globals.accessToken}',
               }))
           .timeout(Duration(seconds: globals.timeOut));
@@ -251,15 +345,15 @@ class BaseService {
           response.data != null) {
         var result = response.data;
         return ApiResult<dynamic>(
+            message: result['message'],
             data: result['data'],
-            statusCode: response.statusCode,
-            message: result['meta']['message'] ?? '');
+            statusCode: response.statusCode);
       } else {
         Logger().e(
             'Error ${response.statusCode} - ${response.statusMessage} - ${response.data}');
         var result = response.data;
         return ApiResult<dynamic>(
-          error: result["meta"]["message"] ?? response.statusMessage ?? '',
+          error: result["message"] ?? response.statusMessage ?? '',
           data: result,
         );
       }

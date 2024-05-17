@@ -19,7 +19,7 @@ class AppText extends StatelessWidget {
       style: style ?? typoNormalTextRegular,
       textScaleFactor: 1,
       textAlign: textAlign,
-      // overflow: overflow ?? TextOverflow.ellipsis,
+      overflow: overflow ?? TextOverflow.ellipsis,
       maxLines: maxLine,
     );
   }

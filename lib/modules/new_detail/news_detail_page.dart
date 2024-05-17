@@ -27,6 +27,7 @@ import '../../gen/assets.gen.dart';
 import '../../utils/app_utils.dart';
 import 'news_detail_bloc.dart';
 import 'news_detail_state.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class NewsDetailPage extends StatefulWidget {
   final NewsModel model;
@@ -59,7 +60,7 @@ class _NewsDetailPageState extends BaseState<NewsDetailPage, NewsDetailBloc> {
                 child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
                     builder: (c, state) => state.isNewsLoading
                         ? const AppCircleLoading()
-                        : state.newsModel == null
+                        : state.newsDetailModel == null
                             ? const AppNotDataWidget(isStack: true)
                             : SingleChildScrollView(
                                 physics: const AlwaysScrollableScrollPhysics(),
@@ -70,29 +71,29 @@ class _NewsDetailPageState extends BaseState<NewsDetailPage, NewsDetailBloc> {
                                     children: [
                                       space(height: 15),
                                       paddingWidget(TitleWidget(
-                                          title: state.newsModel?.name ?? '',
+                                          title:
+                                              state.newsDetailModel?.name ?? '',
                                           size: 20)),
                                       space(),
                                       posterWidget(state),
                                       space(),
-                                      lRoundInfoWidget(),
+                                      descriptionWidget(
+                                          state.newsDetailModel?.content ?? ''),
                                       space(),
-                                      paddingWidget(AppText(
-                                        state.newsModel?.description ?? '',
-                                        style: typoW400.copyWith(
-                                            fontSize: 12,
-                                            color: colorWhite.withOpacity(0.7)),
-                                      )),
-                                      space(),
-                                      paddingWidget(LineWidget()),
+                                      paddingWidget(
+                                          const LineWidget(color: colorWhite)),
                                       space(),
                                       for (var e in anotherNewsWidget(state)) e
                                     ])),
                     bloc: bloc)))
       ]));
 
-  Widget lRoundInfoWidget() =>
-      CustomScrollView(shrinkWrap: true, primary: false, slivers: <Widget>[
+  Widget descriptionWidget(String html) => Padding(
+      padding: EdgeInsets.only(left: contentPadding, right: contentPadding),
+      child: HtmlWidget(html,
+          textStyle: typoW400.copyWith(color: colorWhite, fontSize: 13)));
+
+  /*CustomScrollView(shrinkWrap: true, primary: false, slivers: <Widget>[
         SliverPadding(
             padding:
                 EdgeInsets.only(left: contentPadding, right: contentPadding),
@@ -110,7 +111,7 @@ class _NewsDetailPageState extends BaseState<NewsDetailPage, NewsDetailBloc> {
                       Utils.formatMoney(1000000)),
                   itemContentWidget(LocaleKeys.Donors.tr(), "AWS")
                 ]))
-      ]);
+      ]);*/
 
   Widget itemContentWidget(String title, String? content) => Container(
       alignment: Alignment.center,
@@ -129,7 +130,7 @@ class _NewsDetailPageState extends BaseState<NewsDetailPage, NewsDetailBloc> {
 
   Widget posterWidget(NewsDetailState state) => AspectRatio(
       aspectRatio: 375 / 170,
-      child: AppNetworkImage(source: state.newsModel?.poster));
+      child: AppNetworkImage(source: state.newsDetailModel?.image));
 
   Widget appbar() => AppBarForRootWidget(
       backOnClick: () => Navigator.pop(context),
@@ -141,10 +142,9 @@ class _NewsDetailPageState extends BaseState<NewsDetailPage, NewsDetailBloc> {
 
   List<Widget> anotherNewsWidget(NewsDetailState state) {
     return [
-      paddingWidget(
-        AppText(LocaleKeys.Another_news.tr(),
-            style: typoW700.copyWith(fontSize: 16, color: colorWhite)),
-      ),
+      if (state.isRelatedLoading == false)
+        paddingWidget(AppText(LocaleKeys.Another_news.tr(),
+            style: typoW700.copyWith(fontSize: 16, color: colorWhite))),
       space(height: 15),
       paddingWidget(relatedWidget())
     ];

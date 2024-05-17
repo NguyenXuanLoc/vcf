@@ -1,8 +1,10 @@
 import 'package:base_bloc/base/base_state.dart';
 import 'package:base_bloc/base/hex_color.dart';
 import 'package:base_bloc/components/app_circle_loading.dart';
+import 'package:base_bloc/components/app_network_image.dart';
 import 'package:base_bloc/components/app_text.dart';
 import 'package:base_bloc/components/gradient_text.dart';
+import 'package:base_bloc/data/model/race_detail_model.dart';
 import 'package:base_bloc/data/model/round_model.dart';
 import 'package:base_bloc/generated/locale_keys.g.dart';
 import 'package:base_bloc/modules/round_detail/round_detail_bloc.dart';
@@ -21,7 +23,7 @@ import '../../gen/assets.gen.dart';
 import '../../utils/app_utils.dart';
 
 class RoundDetailPage extends StatefulWidget {
-  final RoundModel model;
+  final RaceDetailModel model;
 
   const RoundDetailPage({super.key, required this.model});
 
@@ -49,13 +51,14 @@ class _RoundDetailPageState extends BaseState<RoundDetailPage, RoundDetailBloc>
                     AspectRatio(
                         aspectRatio: 285 / 114,
                         child: Center(
-                            child: SvgPicture.asset(Assets.svg.icHanoi))),
+                            child:
+                                AppNetworkImage(source: state.model?.photo))),
                     space(),
                     for (var e in lCityInfoWidget(state)) e,
                     space(),
                     lRoundInfoWidget(state),
                     space(),
-                    buyTicketButton
+                    // buyTicketButton
                   ])),
       bloc: bloc);
 
@@ -88,22 +91,23 @@ class _RoundDetailPageState extends BaseState<RoundDetailPage, RoundDetailBloc>
                   crossAxisCount: 2,
                   children: [
                     itemContentWidget(LocaleKeys.Starting_point.tr(),
-                        state.model?.startingPoint),
-                    itemContentWidget(
-                        LocaleKeys.Ending_point.tr(), state.model?.endingPoint),
+                        state.model?.startPoint ?? ''),
+                    itemContentWidget(LocaleKeys.Ending_point.tr(),
+                        state.model?.endPoint ?? ''),
                     itemContentWidget(LocaleKeys.Race_Length.tr(),
-                        state.model?.distance.toString()),
-                    itemContentWidget(LocaleKeys.Map.tr(), state.model?.map),
+                        "${state.model?.distance ?? 0}"),
                     itemContentWidget(
-                        LocaleKeys.Free_water_distribution_point.tr(),
-                        state.model?.waterFree),
+                        LocaleKeys.Map.tr(), state.model?.terrain ?? ''),
+                    /* itemContentWidget(
+                         LocaleKeys.Free_water_distribution_point.tr(),
+                        'waterFree'),*/
                     itemContentWidget(
                         LocaleKeys.Number_of_participating_athletes.tr(),
-                        "${state.model?.totalNumber} ${LocaleKeys.Athletes.tr()}"),
+                        "${state.model?.numberOfAthletic ?? 0} ${LocaleKeys.Athletes.tr()}"),
                     itemContentWidget(LocaleKeys.Participation_costs.tr(),
-                        Utils.formatMoney(state.model?.cost)),
+                        Utils.formatMoney(state.model?.price)),
                     itemContentWidget(
-                        LocaleKeys.Donors.tr(), state.model?.donors),
+                        LocaleKeys.Donors.tr(), state.model?.sponsor ?? '')
                   ]))
         ]);
 
@@ -123,13 +127,13 @@ class _RoundDetailPageState extends BaseState<RoundDetailPage, RoundDetailBloc>
 
   List<Widget> lCityInfoWidget(RoundDetailState state) => [
         Center(
-            child: AppText(state.model?.city ?? '',
+            child: AppText(state.model?.description ?? '',
                 style: typoW700.copyWith(fontSize: 16, color: colorWhite))),
         space(height: 2),
         Center(
-          child: GradientText(Utils.formatDateToddMMYYYY(DateTime.now()),
-              style: typoW700.copyWith(fontSize: 12)),
-        )
+            child: GradientText(
+                Utils.formatDateToddMMYYYY(state.model?.raceDate),
+                style: typoW700.copyWith(fontSize: 12)))
       ];
 
   Widget paddingWidget(Widget child, {bool isPaddingRight = true}) => Padding(

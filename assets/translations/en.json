@@ -69,6 +69,7 @@
   "input_email": "Vui lòng nhập email",
   "do_not_you_have_acc": "Bạn chưa có tài khoản?",
   "please_input_email": "Vui lòng nhập email",
+  "please_input_phone": "Vui lòng nhập số điện thoại",
   "please_input_full_name": "Vui lòng nhập họ tên",
   "please_input_valid_email": "Vui lòng nhập email hợp lệ",
   "please_input_pass": "Vui lòng nhập mật khẩu",
@@ -76,5 +77,11 @@
   "logout": "Đăng xuất",
   "Male": "Nam",
   "FeMale": "Nữ",
-  "All": "Tất cả"
+  "All": "Tất cả",
+  "Not_data_please_try_again": "Không có dữ liệu",
+  "Round": "Vòng",
+  "phone_is_not_valid": "Số điện thoại không đúng định dạng",
+  "old_pass_is_not_valid": "Mật khẩu cũ không đúng",
+  "take_photo": "Chụp ảnh",
+  "pick_photo_from_gallery": "Chọn ảnh từ thư viện"
 }

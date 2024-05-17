@@ -3,6 +3,7 @@ import 'package:base_bloc/base/hex_color.dart';
 import 'package:base_bloc/components/app_scalford.dart';
 import 'package:base_bloc/components/app_text.dart';
 import 'package:base_bloc/config/constant.dart';
+import 'package:base_bloc/data/repository/base_repository.dart';
 import 'package:base_bloc/modules/home_page/home_bloc.dart';
 import 'package:base_bloc/modules/home_page/home_state.dart';
 import 'package:base_bloc/modules/root/root_athlete.dart';

@@ -34,91 +34,23 @@ class TabNewsBloc extends BaseCubit<TabNewsState> {
     getNews();
   }
 
-  void getNews({bool isPaging = false}) {
-    if (state.isLoading || state.isReadEnd) return;
+  void getNews({bool isPaging = false}) async {
+    if (state.isLoading) return;
     emit(state.copyOf(isLoading: true));
-    Timer(
-        const Duration(seconds: 1),
-        () => emit(state.copyOf(
+    try {
+      var response = await repository.getPost(nextPage: state.nextPage);
+      if (response.error == null) {
+        var lRace = newsModelFromJson(response.data);
+        emit(state.copyOf(
+            nextPage: state.nextPage + 1,
             isLoading: false,
-            isReadEnd: state.lNews.length > 20,
-            lNews: !isPaging
-                ? lNews().toList(growable: true)
-                : (state.lNews..addAll(lNews())))));
+            lNews: isPaging ? (state.lNews..addAll(lRace)) : lRace,
+            isReadEnd: lRace.isEmpty));
+      } else {
+        emit(state.copyOf(isLoading: false));
+      }
+    } catch (ex) {
+      emit(state.copyOf(isLoading: false));
+    }
   }
-
-  List<NewsModel> lNews() => [
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Giải địa hình Bến Tre mở rộng',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Giải địa hình Bến Tre mở nhỏ',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Giải đá gà Bến Tre mở rộng',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS'),
-        NewsModel(
-            poster:
-                "https://cdn.24h.com.vn/upload/2-2020/images/2020-04-19/1587272574-850-tung-pang2-1584268658-width650height812.jpg",
-            name: 'Biwase Cup 2024',
-            address: 'Hồ Hoàn Kiếm',
-            dateTime: DateTime.now(),
-            price: 1000000,
-            donors: 'AWS')
-      ];
 }

@@ -1,41 +1,41 @@
 // To parse this JSON data, do
 //
-//     final athleteModel = athleteModelFromJson(jsonString);
+//     final athleteDetailModel = athleteDetailModelFromJson(jsonString);
 
 import 'dart:convert';
 
-List<AthleteModel> athleteModelFromJson(List<dynamic> str) =>
-    List<AthleteModel>.from(str.map((x) => AthleteModel.fromJson(x)));
+AthleteDetailModel athleteDetailModelFromJson(String str) =>
+    AthleteDetailModel.fromJson(json.decode(str));
 
-String athleteModelToJson(List<AthleteModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String athleteDetailModelToJson(AthleteDetailModel data) =>
+    json.encode(data.toJson());
 
-class AthleteModel {
-  dynamic world;
+class AthleteDetailModel {
   int? id;
+  dynamic world;
   String? federationId;
-  String? photo;
+  dynamic photo;
   String? description;
   String? licenseYear;
   String? firstName;
   String? middleName;
   String? lastName;
-  String? preferredFirstName;
+  dynamic preferredFirstName;
   dynamic preferredMiddleName;
-  String? preferredLastName;
-  String? tvFirstName;
+  dynamic preferredLastName;
+  dynamic tvFirstName;
   dynamic tvMiddleName;
-  String? tvLastName;
+  dynamic tvLastName;
   String? gender;
-  DateTime? birthDate;
+  dynamic birthDate;
   dynamic nationality;
-  String? addressOne;
+  dynamic addressOne;
   dynamic addressTwo;
-  String? zip;
-  String? city;
+  dynamic zip;
+  dynamic city;
   dynamic state;
-  String? country;
-  String? homePhone;
+  dynamic country;
+  dynamic homePhone;
   dynamic workPhone;
   dynamic mobile;
   dynamic email;
@@ -43,9 +43,9 @@ class AthleteModel {
   String? isFeatureAthlete;
   int? score;
 
-  AthleteModel({
-    this.world,
+  AthleteDetailModel({
     this.id,
+    this.world,
     this.federationId,
     this.photo,
     this.description,
@@ -77,8 +77,9 @@ class AthleteModel {
     this.score,
   });
 
-  factory AthleteModel.fromJson(Map<String, dynamic> json) => AthleteModel(
-        id: json['id'],
+  factory AthleteDetailModel.fromJson(Map<String, dynamic> json) =>
+      AthleteDetailModel(
+        id: json["id"],
         world: json["world"],
         federationId: json["federation_id"],
         photo: json["photo"],
@@ -94,9 +95,7 @@ class AthleteModel {
         tvMiddleName: json["tv_middle_name"],
         tvLastName: json["tv_last_name"],
         gender: json["gender"],
-        birthDate: json["birth_date"] == null
-            ? null
-            : DateTime.parse(json["birth_date"]),
+        birthDate: json["birth_date"],
         nationality: json["nationality"],
         addressOne: json["address_one"],
         addressTwo: json["address_two"],
@@ -114,6 +113,7 @@ class AthleteModel {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "world": world,
         "federation_id": federationId,
         "photo": photo,
@@ -129,8 +129,7 @@ class AthleteModel {
         "tv_middle_name": tvMiddleName,
         "tv_last_name": tvLastName,
         "gender": gender,
-        "birth_date":
-            "${birthDate!.year.toString().padLeft(4, '0')}-${birthDate!.month.toString().padLeft(2, '0')}-${birthDate!.day.toString().padLeft(2, '0')}",
+        "birth_date": birthDate,
         "nationality": nationality,
         "address_one": addressOne,
         "address_two": addressTwo,

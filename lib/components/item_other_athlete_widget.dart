@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../base/hex_color.dart';
+import '../config/constant.dart';
 import '../data/globals.dart';
 import '../gen/assets.gen.dart';
 import '../theme/app_styles.dart';
 import '../theme/colors.dart';
+import '../utils/app_utils.dart';
 import 'app_network_image.dart';
 import 'app_text.dart';
 
@@ -37,7 +39,9 @@ class ItemOtherAthleteWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: AspectRatio(
                         aspectRatio: 120 / 80,
-                        child: AppNetworkImage(source: model.photo)))),
+                        child: AppNetworkImage(
+                            source: ConstantKey.BASE_IMAGE_URL +
+                                (model.photo ?? ''))))),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -55,11 +59,11 @@ class ItemOtherAthleteWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      LevelWidget(level: model.score),
+                      LevelWidget(level: model.score ?? 0),
                       const SizedBox(width: 6),
                       Expanded(
                           child: AppText(
-                              "${model.birthDate} ${LocaleKeys.Age.tr()}, ${model.city}",
+                              "${Utils.getAgeByBirthDay(model.birthDate)} ${LocaleKeys.Age.tr()}${(model.city ?? '').isNotEmpty ? ',' : ''} ${model.city ?? ''}",
                               maxLine: 1,
                               overflow: TextOverflow.ellipsis,
                               style: typoW500.copyWith(

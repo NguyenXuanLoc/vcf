@@ -8,6 +8,7 @@ import 'package:base_bloc/components/app_scalford.dart';
 import 'package:base_bloc/components/app_text.dart';
 import 'package:base_bloc/components/gradient_button.dart';
 import 'package:base_bloc/components/item_other_athlete_widget.dart';
+import 'package:base_bloc/config/constant.dart';
 import 'package:base_bloc/data/globals.dart';
 import 'package:base_bloc/data/model/athlete_model.dart';
 import 'package:base_bloc/generated/locale_keys.g.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../components/item_top_athlete_widget.dart';
 import '../../gen/assets.gen.dart';
+import '../../utils/app_utils.dart';
 import 'athlete_detail_bloc.dart';
 
 class AthleteDetailPage extends StatefulWidget {
@@ -73,7 +75,9 @@ class _AthleteDetailPageState
   Widget posterWidget(AthleteDetailState state) => Stack(children: [
         AspectRatio(
             aspectRatio: 1 / 0.95,
-            child: AppNetworkImage(source: state.athleteModel?.photo)),
+            child: AppNetworkImage(
+                source: ConstantKey.BASE_IMAGE_URL +
+                    (state.athleteModel?.photo ?? ''))),
         backWidget(),
         Positioned.fill(
             child: Align(
@@ -98,6 +102,7 @@ class _AthleteDetailPageState
   Widget contentWidget(AthleteDetailState state) => SizedBox(
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: paddingBottomNav),
             physics: const AlwaysScrollableScrollPhysics(),
             controller: bloc.controller,
             child:
@@ -126,12 +131,12 @@ class _AthleteDetailPageState
                   borderRadius: BorderRadius.circular(2),
                   color: HexColor("DB241D")),
               child: AppText(
-                  "${LocaleKeys.Top} ${state.athleteModel?.score.toString()}",
+                  "${LocaleKeys.Top} ${state.athleteModel?.score ?? 0}",
                   style: typoW400.copyWith(fontSize: 12, color: colorWhite)),
             ),
             Expanded(
                 child: AppText(
-                    "   ${state.athleteModel?.birthDate},${LocaleKeys.Age.tr()}, ${state.athleteModel?.country}",
+                    "   ${Utils.getAgeByBirthDay(state.athleteModel?.birthDate)} ${LocaleKeys.Age.tr().toLowerCase()}${(state.athleteModel?.city ?? '').isNotEmpty ? "," : ""} ${state.athleteModel?.city ?? ''}",
                     maxLine: 1,
                     style: typoW500.copyWith(
                         fontSize: 12, color: colorWhite.withOpacity(0.6))))

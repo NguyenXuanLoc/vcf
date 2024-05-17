@@ -1,3 +1,4 @@
+import 'package:base_bloc/theme/colors.dart';
 import 'package:base_bloc/utils/log_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import '../config/constant.dart';
 class AppNetworkImage extends StatelessWidget {
   const AppNetworkImage({
     Key? key,
+    this.errorWidget,
     this.loadStateCallBack,
     this.enableLoadState = false,
     this.source,
@@ -23,22 +25,28 @@ class AppNetworkImage extends StatelessWidget {
   final BoxDecoration? decoration;
   final Function(LoadState)? loadStateCallBack;
   final bool enableLoadState;
+  final Widget? errorWidget;
 
   @override
   Widget build(BuildContext context) {
-    return (source != null && (source ?? '').isNotEmpty)
-        ? ExtendedImage.network(
-            gaplessPlayback: true,
-            (source ?? ""),
-            enableLoadState: false, loadStateChanged: (state) {
-            if (state.extendedImageLoadState == LoadState.completed) {
-              if (loadStateCallBack != null) {
-                loadStateCallBack?.call(state.extendedImageLoadState);
+    return Container(
+      color: colorWhite.withOpacity(0.2),
+      child: (source != null && (source ?? '').isNotEmpty)
+          ? ExtendedImage.network(
+              gaplessPlayback: true,
+              (source ?? ""),
+              enableLoadState: false, loadStateChanged: (state) {
+              if (state.extendedImageLoadState == LoadState.completed) {
+                if (loadStateCallBack != null) {
+                  loadStateCallBack?.call(state.extendedImageLoadState);
+                }
+                return state.completedWidget;
               }
-              return state.completedWidget;
-            }
-            return const SizedBox();
-          }, fit: fit ?? BoxFit.cover)
-        : const SizedBox();
+              if (state.extendedImageLoadState == LoadState.failed &&
+                  errorWidget != null) return errorWidget;
+              return SizedBox();
+            }, fit: fit ?? BoxFit.cover)
+          : errorWidget ?? Container(),
+    );
   }
 }

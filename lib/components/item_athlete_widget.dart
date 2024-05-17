@@ -2,11 +2,13 @@ import 'package:base_bloc/base/hex_color.dart';
 import 'package:base_bloc/components/app_network_image.dart';
 import 'package:base_bloc/components/app_text.dart';
 import 'package:base_bloc/components/level_widget.dart';
+import 'package:base_bloc/config/constant.dart';
 import 'package:base_bloc/data/globals.dart';
 import 'package:base_bloc/data/model/athlete_model.dart';
 import 'package:base_bloc/generated/locale_keys.g.dart';
 import 'package:base_bloc/theme/app_styles.dart';
 import 'package:base_bloc/theme/colors.dart';
+import 'package:base_bloc/utils/app_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +43,8 @@ class ItemAthleteWidget extends StatelessWidget {
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20)),
-                  child: AppNetworkImage(source: model.photo),
+                  child: AppNetworkImage(
+                      source: ConstantKey.BASE_IMAGE_URL + (model.photo ?? '')),
                 )),
             Container(
                 padding: const EdgeInsets.all(13),
@@ -68,7 +71,7 @@ class ItemAthleteWidget extends StatelessWidget {
                               isSmallText: true),
                           const SizedBox(width: 7),
                           AppText(
-                            "${model.birthDate} ${LocaleKeys.Age.tr()}",
+                            "${Utils.getAgeByBirthDay(model.birthDate)} ${LocaleKeys.Age.tr()}",
                             style: typoW400.copyWith(
                                 fontSize: 8,
                                 color: colorWhite.withOpacity(0.8)),

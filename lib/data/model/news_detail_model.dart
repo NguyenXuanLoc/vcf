@@ -1,44 +1,45 @@
 // To parse this JSON data, do
 //
-//     final newsModel = newsModelFromJson(jsonString);
+//     final newsDetailModel = newsDetailModelFromJson(jsonString);
 
 import 'dart:convert';
 
-List<NewsModel> newsModelFromJson(List<dynamic> str) =>
-    List<NewsModel>.from(str.map((x) => NewsModel.fromJson(x)));
+NewsDetailModel newsDetailModelFromJson(String str) =>
+    NewsDetailModel.fromJson(json.decode(str));
 
-String newsModelToJson(List<NewsModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String newsDetailModelToJson(NewsDetailModel data) =>
+    json.encode(data.toJson());
 
-class NewsModel {
+class NewsDetailModel {
   int? id;
   String? name;
   String? slug;
   String? description;
+  String? content;
   String? image;
-  String? sponsor;
   List<Category>? categories;
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  NewsModel({
+  NewsDetailModel({
     this.id,
     this.name,
     this.slug,
-    this.sponsor,
     this.description,
+    this.content,
     this.image,
     this.categories,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory NewsModel.fromJson(Map<String, dynamic> json) => NewsModel(
-        sponsor: json["sponsor"],
+  factory NewsDetailModel.fromJson(Map<String, dynamic> json) =>
+      NewsDetailModel(
         id: json["id"],
         name: json["name"],
         slug: json["slug"],
         description: json["description"],
+        content: json["content"],
         image: json["image"],
         categories: json["categories"] == null
             ? []
@@ -57,6 +58,7 @@ class NewsModel {
         "name": name,
         "slug": slug,
         "description": description,
+        "content": content,
         "image": image,
         "categories": categories == null
             ? []
@@ -68,8 +70,8 @@ class NewsModel {
 
 class Category {
   int? id;
-  Name? name;
-  Slug? slug;
+  String? name;
+  String? slug;
   String? url;
   String? description;
 
@@ -83,45 +85,17 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
-        name: nameValues.map[json["name"]]!,
-        slug: slugValues.map[json["slug"]]!,
+        name: json["name"],
+        slug: json["slug"],
         url: json["url"],
         description: json["description"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": nameValues.reverse[name],
-        "slug": slugValues.reverse[slug],
+        "name": name,
+        "slug": slug,
         "url": url,
         "description": description,
       };
-}
-
-enum Name { COMMERCIAL, ELECTRONIC, FASHION }
-
-final nameValues = EnumValues({
-  "Commercial": Name.COMMERCIAL,
-  "Electronic": Name.ELECTRONIC,
-  "Fashion": Name.FASHION
-});
-
-enum Slug { COMMERCIAL, ELECTRONIC, FASHION }
-
-final slugValues = EnumValues({
-  "commercial": Slug.COMMERCIAL,
-  "electronic": Slug.ELECTRONIC,
-  "fashion": Slug.FASHION
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

@@ -17,7 +17,7 @@ class RegisterBloc extends BaseCubit<RegisterState> {
   var fullNameController = TextEditingController();
 
   RegisterBloc() : super(const RegisterState()) {
-    fakeData();
+    // fakeData();
   }
 
   void fakeData() {
@@ -38,7 +38,7 @@ class RegisterBloc extends BaseCubit<RegisterState> {
     if (isValid()) {
       Dialogs.showLoadingDialog(context);
       var response = await repository.registerWithEmail(
-          emailController.text, passController.text);
+          emailController.text, passController.text, fullNameController.text);
       await Dialogs.hideLoadingDialog();
       if (response.error == null) {
         toast(response.message.toString());

@@ -2,27 +2,37 @@ import 'package:base_bloc/data/model/athlete_model.dart';
 import 'package:base_bloc/data/model/news_model.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../data/model/news_detail_model.dart';
+
 class NewsDetailState extends Equatable {
   final bool isNewsLoading;
-  final NewsModel? newsModel;
+  NewsModel? newsModel;
   final List<NewsModel> lRelated;
   final bool isRelatedLoading;
   final bool isRelatedReadEnd;
+  final NewsDetailModel? newsDetailModel;
+  final int nextPage;
 
-  const NewsDetailState(
+  NewsDetailState(
       {this.isNewsLoading = false,
+      this.nextPage = 1,
       this.isRelatedReadEnd = false,
       this.newsModel,
+      this.newsDetailModel,
       this.lRelated = const [],
       this.isRelatedLoading = false});
 
   NewsDetailState copyOf(
           {bool? isNewsLoading,
+          int? nextPage,
+          NewsDetailModel? newsDetailModel,
           bool? isRelatedReadEnd,
           bool? isRelatedLoading,
           List<NewsModel>? lRelated,
           NewsModel? newsModel}) =>
       NewsDetailState(
+          nextPage: nextPage ?? this.nextPage,
+          newsDetailModel: newsDetailModel ?? this.newsDetailModel,
           isRelatedReadEnd: isRelatedReadEnd ?? this.isRelatedReadEnd,
           newsModel: newsModel ?? this.newsModel,
           isNewsLoading: isNewsLoading ?? this.isNewsLoading,
@@ -30,6 +40,13 @@ class NewsDetailState extends Equatable {
           lRelated: lRelated ?? this.lRelated);
 
   @override
-  List<Object?> get props =>
-      [isNewsLoading, newsModel, lRelated, isRelatedLoading, isRelatedReadEnd];
+  List<Object?> get props => [
+        nextPage,
+        isNewsLoading,
+        newsModel,
+        lRelated,
+        isRelatedLoading,
+        isRelatedReadEnd,
+        newsDetailModel
+      ];
 }

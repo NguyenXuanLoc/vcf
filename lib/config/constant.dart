@@ -5,6 +5,8 @@ class StorageKey {
 
   static const token = "token";
   static const userModel = "userModel";
+  static const pass = 'pass';
+  static const email = 'email';
 }
 
 class FirebaseRemoteConfigConstant {
@@ -35,6 +37,7 @@ class ConstantKey {
   static const String All = 'all';
   static const RESTAURANT_NOT_FOUND = 0;
   static const appName = "VCF";
+  static const BASE_IMAGE_URL = "";
 }
 
 class MessageKey {
@@ -43,6 +46,7 @@ class MessageKey {
 }
 
 class ApiKey {
+  static const String full_name = 'full_name';
   static const String email = 'email';
   static const String password = 'password';
   static const String token = 'token';
@@ -51,4 +55,8 @@ class ApiKey {
   static const String other = 'other';
   static const String is_feature_athlete = 'is_feature_athlete';
   static const String gender = 'gender';
+  static const String location = 'locations';
+  static const String first_name = 'first_name';
+  static const String phone = 'phone';
+  static const String parent_race_id = 'parent_race_id';
 }

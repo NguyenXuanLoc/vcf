@@ -11,26 +11,22 @@ import 'package:base_bloc/utils/app_utils.dart';
 import 'package:base_bloc/utils/log_utils.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../data/model/tournament_model.dart';
+import '../../data/model/race_model.dart';
 
 class TabHomeBloc extends BaseCubit<TabHomeState> {
   TabHomeBloc() : super(const TabHomeState()) {
-    getTournament();
+    getRace();
     getAthlete();
   }
 
-  void getTournament() {
-    Timer(const Duration(seconds: 1),
-        () => emit(state.copyOf(isTournamentLoading: false, lTournament: [])));
-  }
 
-  void allTournamentObClick() =>
+  void allRaceOnClick() =>
       Utils.fireEvent(JumpToPageEvent(BottomNavigationConstant.TAB_RACE));
 
   void allAthleteOnClick() =>
       Utils.fireEvent(JumpToPageEvent(BottomNavigationConstant.TAB_ATHLETE));
 
-  void itemTournamentOnClick(TournamentModel model, BuildContext context) {
+  void itemTournamentOnClick(RaceModel model, BuildContext context) {
     RouterUtils.pushHome(
         context: context,
         route: HomeRouter.tournamentDetail,
@@ -44,16 +40,41 @@ class TabHomeBloc extends BaseCubit<TabHomeState> {
         argument: [model, BottomNavigationConstant.TAB_HOME]);
   }
 
-  void getAthlete() {
-    Timer(const Duration(seconds: 1),
-        () => emit(state.copyOf(isAthleteLoading: false, lAthlete: fakeAth())));
+  void getRace({bool isPaging = false}) async {
+    if (state.isRaceLoading) return;
+    emit(state.copyOf(isRaceLoading: true));
+    try {
+      var response = await repository.getRace();
+      if (response.error == null) {
+        var lRace = raceModelFromJson(response.data);
+        emit(state.copyOf(isRaceLoading: false, lRace: lRace));
+      } else {
+        emit(state.copyOf(isRaceLoading: false));
+      }
+    } catch (ex) {
+      emit(state.copyOf(isRaceLoading: false));
+    }
+  }
+
+  void getAthlete({bool isPaging = false}) async {
+    if (state.isAthleteLoading) return;
+    emit(state.copyOf(isAthleteLoading: true));
+    try {
+      var response = await repository.getAthlete();
+      if (response.error == null) {
+        var lAthlete = athleteModelFromJson(response.data);
+        emit(state.copyOf(isAthleteLoading: false, lAthlete: lAthlete));
+      } else {
+        emit(state.copyOf(isAthleteLoading: false));
+      }
+    } catch (ex) {
+      emit(state.copyOf(isAthleteLoading: false));
+    }
   }
 
   void onRefresh() {
     emit(const TabHomeState());
     getAthlete();
-    getTournament();
+    getRace();
   }
-
-  List<AthleteModel> fakeAth() => [];
 }

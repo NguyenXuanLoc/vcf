@@ -33,6 +33,29 @@ class UserModel {
     this.uciId,
   });
 
+  UserModel copyOf(
+          {int? id,
+          String? firstName,
+          String? lastName,
+          String? email,
+          dynamic phone,
+          String? avatar,
+          dynamic dob,
+          dynamic gender,
+          String? description,
+          dynamic uciId}) =>
+      UserModel(
+          id: id ?? this.id,
+          firstName: firstName ?? this.firstName,
+          lastName: lastName ?? this.lastName,
+          email: email ?? this.email,
+          phone: phone ?? this.phone,
+          avatar: avatar ?? this.avatar,
+          dob: dob ?? this.dob,
+          gender: gender ?? this.gender,
+          description: description ?? this.description,
+          uciId: uciId);
+
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json["id"],
         firstName: json["first_name"],

@@ -6,7 +6,7 @@ import 'package:base_bloc/components/app_refresh_widget.dart';
 import 'package:base_bloc/components/app_scalford.dart';
 import 'package:base_bloc/components/app_text.dart';
 import 'package:base_bloc/components/item_athlete_widget.dart';
-import 'package:base_bloc/components/item_tournament_widget.dart';
+import 'package:base_bloc/components/item_race_widget.dart';
 import 'package:base_bloc/components/title_widget.dart';
 import 'package:base_bloc/data/globals.dart';
 import 'package:base_bloc/generated/locale_keys.g.dart';
@@ -61,30 +61,30 @@ class _TabHomeState extends BaseState<TabHome, TabHomeBloc>
             child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.only(bottom: paddingBottomNav),
-                child: Column(children: [
-                  AppBarForRootWidget(),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const AppBarForRootWidget(),
                   space(),
-                  for (var e in tournamentWidget()) e,
+                  for (var e in raceWidget()) e,
                   space(height: 35),
                   for (var e in athleteWidget()) e,
                   space(height: 35),
-                  for (var e in tournamentImageWidget()) e,
-                  space()
+          /*        for (var e in tournamentImageWidget()) e,
+                  space()*/
                 ])),
           ),
         ));
   }
 
-  List<Widget> tournamentImageWidget() => [
-        titleWidget(LocaleKeys.Video_Tournament_images.tr()),
+  List<Widget> raceWidget() => [
+        titleWidget(LocaleKeys.Tournament_information.tr(),
+            allOnClick: () => bloc.allRaceOnClick()),
         space(),
         BlocBuilder<TabHomeBloc, TabHomeState>(
             bloc: bloc,
-            builder: (c, state) => state.isTournamentLoading
+            builder: (c, state) => state.isRaceLoading
                 ? AppCircleLoading(
-                    height: MediaQuery.of(context).size.width / 1.85 * 0.67,
-                  )
-                : state.lTournament.isEmpty
+                    height: MediaQuery.of(context).size.width / 1.85 * 0.67)
+                : state.lRace.isEmpty
                     ? appNotDataWidget(
                         height: MediaQuery.of(context).size.width / 1.85 * 0.67)
                     : Padding(
@@ -93,39 +93,12 @@ class _TabHomeState extends BaseState<TabHome, TabHomeBloc>
                             scrollDirection: Axis.horizontal,
                             child:
                                 Row(mainAxisSize: MainAxisSize.min, children: [
-                              for (var e in state.lTournament)
+                              for (var e in state.lRace)
                                 ItemTournamentWidget(
                                     model: e,
                                     itemOnClick: () =>
                                         bloc.itemTournamentOnClick(e, context))
                             ]))))
-      ];
-
-  List<Widget> tournamentWidget() => [
-        titleWidget(LocaleKeys.Tournament_information.tr(),
-            allOnClick: () => bloc.allTournamentObClick()),
-        space(),
-        BlocBuilder<TabHomeBloc, TabHomeState>(
-            bloc: bloc,
-            builder: (c, state) => state.isTournamentLoading
-                ? AppCircleLoading(
-                    height: MediaQuery.of(context).size.width / 1.85 * 0.67)
-                : state.lTournament.isEmpty
-                    ? appNotDataWidget(
-                        height: MediaQuery.of(context).size.width / 1.85 * 0.67)
-                    : Padding(
-                        padding: EdgeInsets.only(left: contentPadding),
-                        child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              for (var e in state.lTournament)
-                                ItemTournamentWidget(
-                                    model: e,
-                                    itemOnClick: () =>
-                                        bloc.itemTournamentOnClick(e, context))
-                            ])),
-                      ))
       ];
 
   List<Widget> athleteWidget() => [
@@ -134,10 +107,10 @@ class _TabHomeState extends BaseState<TabHome, TabHomeBloc>
         space(),
         BlocBuilder<TabHomeBloc, TabHomeState>(
             bloc: bloc,
-            builder: (c, state) => state.isTournamentLoading
+            builder: (c, state) => state.isAthleteLoading
                 ? AppCircleLoading(
                     height: MediaQuery.of(context).size.width / 1.85 * 1.2)
-                : state.lTournament.isEmpty
+                : state.lAthlete.isEmpty
                     ? appNotDataWidget(
                         height: MediaQuery.of(context).size.width / 1.85 * 1.2)
                     : Padding(

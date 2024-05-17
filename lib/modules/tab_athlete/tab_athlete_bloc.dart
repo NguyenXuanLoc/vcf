@@ -30,8 +30,12 @@ class TabAthleteBloc extends BaseCubit<TabAthleteState> {
   }
 
   void filterOnClick(String value) {
-    emit(state
-        .copyOf(male: value, isLoading: false, isReadEnd: false, lAth: []));
+    emit(state.copyOf(
+        nextPage: 1,
+        male: value,
+        isLoading: false,
+        isReadEnd: false,
+        lAth: []));
     getAthlete();
   }
 
@@ -52,11 +56,14 @@ class TabAthleteBloc extends BaseCubit<TabAthleteState> {
     if (state.isLoading || state.isReadEnd) return;
     emit(state.copyOf(isLoading: true));
     try {
-      var response = await repository.getAthleteFilter(
-          nextPage: state.nextPage, gender: state.mMale[state.male] ?? '');
+      var response = state.male == LocaleKeys.All.tr()
+          ? await repository.getAthlete(nextPage: state.nextPage)
+          : await repository.getAthleteFilter(
+              nextPage: state.nextPage, gender: state.mMale[state.male] ?? '');
       if (response.error == null) {
         var lAthlete = athleteModelFromJson(response.data);
         emit(state.copyOf(
+            nextPage: state.nextPage + 1,
             isReadEnd: lAthlete.isEmpty,
             isLoading: false,
             lAth: isPaging ? (state.lAth..addAll(lAthlete)) : lAthlete));
