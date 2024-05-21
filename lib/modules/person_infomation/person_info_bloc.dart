@@ -28,6 +28,7 @@ class PersonInfoBloc extends Cubit<PersonInfoState> {
   }
 
   void getUserInfo() async {
+    await Utils.getUserInfo();
     var user = await StorageUtils.getUserInfo();
     emit(state.copyOf(userModel: user, isRefresh: !state.isRefresh));
   }

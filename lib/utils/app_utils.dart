@@ -9,6 +9,7 @@ import 'package:hl_image_picker/hl_image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart'
     as image_compress;
+import '../data/eventbus/refresh_event.dart';
 import '../data/globals.dart' as globals;
 import '../data/model/user_model.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -59,14 +60,20 @@ class Utils {
     return true;
   }
 
+  static bool isGetUserInfoSuccess = false;
+
   static Future<void> getUserInfo() async {
-    if (globals.isLogin && globals.userModel == null) {
-      var response = await repository.getUserProfile();
-      if (response.error == null) {
-        var userModel = UserModel.fromJson(response.data);
-        StorageUtils.saveUserModel(userModel);
+    try {
+      if (globals.isLogin && isGetUserInfoSuccess == false) {
+        var response = await repository.getUserProfile();
+        if (response.error == null) {
+          var userModel = UserModel.fromJson(response.data);
+          await StorageUtils.saveUserModel(userModel);
+          Utils.fireEvent(RefreshEvent(refreshType: RefreshType.HOME));
+        }
+        isGetUserInfoSuccess = true;
       }
-    }
+    } catch (ex) {}
   }
 
   static int getAgeByBirthDay(DateTime? age) {

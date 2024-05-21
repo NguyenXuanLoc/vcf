@@ -163,6 +163,7 @@ class UpdateProfileBloc extends BaseCubit<UpdateProfileState> {
   }
 
   void getUserProfile() async {
+    await Utils.getUserInfo();
     var userModel = await StorageUtils.getUserInfo();
     emailController.text = userModel?.email ?? '';
     phoneNumberController.text = userModel?.phone ?? '';

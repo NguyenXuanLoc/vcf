@@ -77,7 +77,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginBloc> {
                     space(height: 35),
                     loginButton,
                     space(),
-                    orWidget,
+             /*       orWidget,
                     space(height: 20),
                     loginWithButton(
                         LocaleKeys.Sign_in_with_your_Google_account.tr(),
@@ -88,7 +88,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginBloc> {
                         LocaleKeys.Log_in_with_your_Facebook_account.tr(),
                         Assets.svg.icFb,
                         () => bloc.signInWithFacebook()),
-                    space(height: 20),
+                    space(height: 20),*/
                     registerNowWidget()
                   ]),
                 )),

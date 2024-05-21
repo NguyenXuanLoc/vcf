@@ -33,10 +33,8 @@ class HomeBloc extends BaseCubit<HomeState> {
   }
 
   void getUserInfo() async {
-    if (globals.isLogin && globals.userModel == null) {
-      await Utils.getUserInfo();
-      emit(state.copyOf(isRefreshUi: !state.isRefreshUi));
-    }
+    await Utils.getUserInfo();
+    emit(state.copyOf(isRefreshUi: !state.isRefreshUi));
   }
 
   void init() {}
